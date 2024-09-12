@@ -1,36 +1,52 @@
-import React from 'react'
-import LiveTimestamp from './LiveTimestamp';
-import ReadMoreButton from './ReadMoreButton';
+import Image from 'next/image'
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Clock } from "lucide-react"
 
-type Props = {
-	article: Article;
+interface Article {
+	title: string
+	description: string
+	image: string
+	source: string
+	published_at: string
+	url: string
 }
 
-const Article = ({article}: Props) => {
+interface ArticleProps {
+	article: Article
+}
+
+export default function Article({ article }: ArticleProps) {
 	return (
-		<article className='bg-slate-100 dark:bg-slate-800 flex flex-col
-		rounded-lg shadow-lg hover:scale-105 hover:shadow-lg hover:bg-slate-200 transition-all
-		duration-200 ease-out'>
-			{article.image &&
-				<img
-					src={article.image}
-					alt={article.title}
-					className='h-56 w-full object-cover rounded-t-lg shadow-md' />}
-			<div className='flex flex-col flex-1'>
-				<div className='flex flex-col flex-1 p-5'>
-					<h2 className='font-bold font-serif '>{article.title}</h2>
-					<section className='flex-1 mt-2'>
-						<p className='text-xs line-clamp-6'>{article.description}</p>
-					</section>
-					<footer className='text-xs text-right ml-auto flex space-x-1 pt-5 italic text-gray-400'>
-						<p>{article.source}-</p>
-						<p><LiveTimestamp time={article.published_at}/></p>
-					</footer>
+		<Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+			<CardHeader className="p-0">
+				{article.image &&
+					<img
+						src={article.image}
+						alt={article.title}
+						className='h-56 w-full object-cover rounded-t-lg shadow-md' />}
+			</CardHeader>
+			<CardContent className="p-4">
+				<h2 className="text-2xl font-bold mb-2 line-clamp-2">{article.title}</h2>
+				<p className="text-sm text-muted-foreground line-clamp-3 mb-4">{article.description}</p>
+				<div className="flex items-center justify-between text-xs text-muted-foreground">
+					<Badge variant="secondary">{article.source}</Badge>
+					<div className="flex items-center">
+						<Clock className="w-4 h-4 mr-1" />
+						<time dateTime={article.published_at}>
+							{new Date(article.published_at).toLocaleDateString()}
+						</time>
+					</div>
 				</div>
-				<ReadMoreButton article={article}/>
-			</div>
-		</article>
+			</CardContent>
+			<CardFooter>
+				<Button asChild className="w-full">
+					<a href={article.url} target="_blank" rel="noopener noreferrer">
+						Read More
+					</a>
+				</Button>
+			</CardFooter>
+		</Card>
 	)
 }
-
-export default Article
